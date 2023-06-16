@@ -1,22 +1,24 @@
 package com.timecouter.www;
 
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.StringTokenizer;
-import org.apache.hadoop.io.IntWritable;
-import org.apache.hadoop.io.Text;
-import org.apache.hadoop.mapreduce.Mapper;
-import org.apache.hadoop.io.LongWritable;
+import org.apache.hadoop.io.*;
+import org.apache.hadoop.mapred.*;
 
-public class TimeCounterMapper extends Mapper <LongWritable, Text, Text, IntWritable> {
-	private Text word = new Text();
-	private final static IntWritable one = new IntWritable(1);
+public class TimeCounterMapper extends MapReduceBase implements Mapper <LongWritable, Text, LongWritable, Text> {
+	private LongWritable k = new LongWritable();
+	private Text v = new Text();
 	
-	public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException
-	{
-		StringTokenizer itr = new StringTokenizer(value.toString()); //Dividing String into tokens
-		while (itr.hasMoreTokens()){
-			word.set(itr.nextToken());
-			context.write(word, one); //new IntWritable(1)
+	public void map(LongWritable key, Text value, OutputCollector<LongWritable, Text> output, Reporter reporter) throws IOException {
+		String[] tokens = value.toString().split("\\s");
+		if (tokens[0].charAt(0) != '#') {
+			Long machine = new Long(tokens[1]);
+			if (tokens[2].equals("1")){
+				k.set(machine);
+				v.set(tokens[3]+":"+tokens[4]);
+				output.collect(k, v);
+			}
 		}
 	}
 }

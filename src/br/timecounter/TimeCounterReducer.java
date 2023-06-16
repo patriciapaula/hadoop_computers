@@ -1,12 +1,9 @@
-package com.timecouter.www;
+package br.timecounter;
 
 import java.io.IOException;
 import java.util.Iterator;
-import java.util.StringTokenizer;
-import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.*;
 import org.apache.hadoop.mapred.*;
-import org.apache.hadoop.util.GenericOptionsParser;
 
 public class TimeCounterReducer extends MapReduceBase implements Reducer <LongWritable, Text, LongWritable, Text> {
 	private Text v = new Text();

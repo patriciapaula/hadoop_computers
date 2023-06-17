@@ -1,5 +1,6 @@
 package br.timecounter;
 
+
 import java.io.IOException;
 import org.apache.hadoop.io.*;
 import org.apache.hadoop.mapred.*;

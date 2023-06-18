@@ -1,6 +1,5 @@
 package br.timecounter;
 
-
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.*;
 import org.apache.hadoop.mapred.*;
@@ -20,7 +19,7 @@ public class TimeCounter {
 		
 		conf.setInputFormat(TextInputFormat.class);
 		conf.setOutputFormat(TextOutputFormat.class);
-		
+				
 		FileInputFormat.setInputPaths(conf, new Path(args[2]));
 		FileOutputFormat.setOutputPath(conf, new Path(args[3]));
 		

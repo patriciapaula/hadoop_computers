@@ -1,8 +1,10 @@
 package br.timecounter;
 
-
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
+
 import org.apache.hadoop.io.*;
 import org.apache.hadoop.mapred.*;
 
@@ -11,27 +13,20 @@ public class TimeCounterReducer extends MapReduceBase implements Reducer <LongWr
 	
 	public void reduce(LongWritable key, Iterator<Text> values, OutputCollector<LongWritable, Text> output, Reporter reporter) throws IOException {
 		Long sum = new Long(0);
-		Long traceStart = new Long(Long.MAX_VALUE);
-		Long traceEnd = new Long(0);
-		Long start = new Long(0);
-		Long end = new Long(0);
-				
-		while (values.hasNext()) {
-			String line = values.next().toString();
-			String[] tokens = line.split(":");
-			start = new Double(tokens[0]).longValue();
-			end = new Double(tokens[1]).longValue();
-			
-			if (start < traceStart) {
-				traceStart = start;
-			}
-			if (end > traceEnd) {
-				traceEnd = end;
-			}
-			sum += (end-start);
-		}
-		
+		for (Long value : convertIteratorToList(values)) {
+            sum += value;
+        }
 		v = new Text (Long.toString(sum));
 		output.collect(key, v);
 	}
+	
+	private ArrayList<Long> convertIteratorToList(Iterator<Text> values) {
+		List<Long> list = new ArrayList<>();
+		while (values.hasNext()) {
+            Long value = Long.parseLong(String.valueOf(values.next()));
+            list.add(value);
+        }
+		return (ArrayList<Long>) list;
+    }
+	
 }

@@ -13,15 +13,15 @@ public class TimeCounterMapper extends MapReduceBase implements Mapper <LongWrit
 	private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	
 	public void map(LongWritable key, Text value, OutputCollector<LongWritable, Text> output, Reporter reporter) throws IOException {
-		String[] tokens = value.toString().split("\t");
+		String[] tokens = value.toString().split("\\s");
 		if (tokens[0].charAt(0) != '#') {
 			Long machine = new Long(tokens[1]); //node name
 			if (tokens[2].equals("1")){ //on
-				long startTime = parseTimestamp(tokens[3]);
-                long endTime = parseTimestamp(tokens[4]);
-                
+				Long startTime = parseTimestamp(tokens[3]);
+				Long endTime = parseTimestamp(tokens[4]);
+            
 				k.set(machine);
-				v.set(String.valueOf(endTime - startTime));
+				v.set(String.format("Start Time: %.2f, End Time: %.2f", (float)startTime, (float)endTime));
 				output.collect(k, v);
 			}
 		}
